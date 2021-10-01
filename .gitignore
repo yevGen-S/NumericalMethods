@@ -1,0 +1,12 @@
+*.idea/
+*.kdev4/
+*/Lab1.kdev4
+*/Makefile
+*/NumMethods.kdev4
+*/__pycache__/
+*/assert_test
+*/bin/
+*/lab2.py
+*/num_methods
+*/src/
+*/venv/
