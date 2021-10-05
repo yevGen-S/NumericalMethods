@@ -6,7 +6,7 @@ A = ([[3, 2, 1],
      [1, 2, 5]])
 
 
-def LDLt(matrix):
+def LD(matrix):
     L = np.zeros((n, n))
     D = np.zeros((n, n))
     D[0][0] = A[0][0]
@@ -23,7 +23,7 @@ def LDLt(matrix):
     return L, D
 
 
-LD = LDLt(A)
-print(A, '\n\n', LD[0], '\n\n', LD[1])
-Lt = LD[0].T
-print("A = LDLt\n", LD[0].dot(LD[1].dot(Lt)))
+L,D = LD(A)
+print(A, '\n\n', L, '\n\n', D)
+Lt = L.T
+print("A = LDLt\n", L.dot(D.dot(Lt)))
