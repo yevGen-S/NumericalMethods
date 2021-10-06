@@ -123,9 +123,17 @@ plt.figure(1)
 plt.title("Графики функций")
 plt.ylabel('Y')
 plt.xlabel('X')
+plt.text(b2-0.1, 0, "»", verticalalignment='center', horizontalalignment='center')
+plt.text(x_absolute_poly, 0, "0", verticalalignment='center', horizontalalignment='center')
+plt.text(a2+0.1,0, "«", verticalalignment='center', horizontalalignment='center')
 plt.plot(_x1, fun_trans(_x1), label='(x - 1) ^ 2 - exp(-x)')
 plt.plot(_x2, fun_poly(_x2), label='x ^ 4 - 10 * x ^ 2 - 16 * x + 5')
 plt.legend()
+plt.text(b1-0.35, 0, "»", verticalalignment='center', horizontalalignment='center')
+plt.text(x_absolute_trans, 0, "0", verticalalignment='center', horizontalalignment='center')
+plt.text(a1+1,0, "«", verticalalignment='center', horizontalalignment='center')
+
+
 plt.grid()
 
 print(
