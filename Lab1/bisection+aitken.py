@@ -123,9 +123,17 @@ plt.figure(1)
 plt.title("Графики функций")
 plt.ylabel('Y')
 plt.xlabel('X')
+plt.text(b2-0.1, 0, "»", verticalalignment='center', horizontalalignment='center')
+plt.text(x_absolute_poly, 0, "0", verticalalignment='center', horizontalalignment='center')
+plt.text(a2+0.1,0, "«", verticalalignment='center', horizontalalignment='center')
 plt.plot(_x1, fun_trans(_x1), label='(x - 1) ^ 2 - exp(-x)')
 plt.plot(_x2, fun_poly(_x2), label='x ^ 4 - 10 * x ^ 2 - 16 * x + 5')
 plt.legend()
+plt.text(b1-0.35, 0, "»", verticalalignment='center', horizontalalignment='center')
+plt.text(x_absolute_trans, 0, "0", verticalalignment='center', horizontalalignment='center')
+plt.text(a1+1,0, "«", verticalalignment='center', horizontalalignment='center')
+
+
 plt.grid()
 
 print(
@@ -133,33 +141,33 @@ print(
 print(
     "                                                                   (x - 1) ^ 2 - exp(-x)                                                                                                      ")
 bisec1 = bisection(fun_trans, a1, b1, eps1, x_absolute_trans)
-print("result: ", bisec1[0], "iterations: ", bisec1[1])
+print("result: ", bisec1[0], "\niterations: ", bisec1[1])
 print(
     "                                                                x ^ 4 - 10 * x ^ 2 - 16 * x + 5                                                                                               ")
 bisec2 = bisection(fun_poly, a2, b2, eps1, x_absolute_poly)
-print("result: ", bisec2[0], "iterations: ", bisec2[1])
+print("result: ", bisec2[0], "\niterations: ", bisec2[1])
 
 print(
     "------------------------------------------------------------------Fixed Point Iterations------------------------------------------------------------------------------------------------------")
 print(
     "                                                     --            (x - 1) ^ 2 - exp(-x)                                                                                                      ")
 fixed_p_i_1 = fixedPointIterations(phi_fun_trans, eps1, a1 + (b1 - a1) / 3, q1, x_absolute_trans)
-print("result: ", fixed_p_i_1[0], "iterations: ", fixed_p_i_1[1])
+print("result: ", fixed_p_i_1[0], "\niterations: ", fixed_p_i_1[1])
 print(
     "                                                                x ^ 4 - 10 * x ^ 2 - 16 * x + 5                                                                                               ")
 fixed_p_i_2 = fixedPointIterations(phi_fun_poly, eps1, a1 + (b1 - a1) / 3, q2, x_absolute_poly)
-print("result: ", fixed_p_i_2[0], "iterations: ", fixed_p_i_2[1])
+print("result: ", fixed_p_i_2[0], "\niterations: ", fixed_p_i_2[1])
 
 print(
     "----------------------------------------------------------------------Eitken------------------------------------------------------------------------------------------------------------------")
 print(
     "                                                                 (x - 1) ^ 2 - exp(-x)                                                                                                        ")
 aitken1 = fixedPointIterations_Aitken(phi_fun_trans, phi_fun_trans_d, eps2, a1 + (b1 - a1) / 3, q1, x_absolute_trans)
-print("result: ", aitken1[0], "iterations: ", aitken1[1])
+print("result: ", aitken1[0], "\niterations: ", aitken1[1])
 print(
     "                                                                x ^ 4 - 10 * x ^ 2 - 16 * x + 5                                                                                               ")
 aitken2 = fixedPointIterations_Aitken(phi_fun_poly, phi_fun_poly_d, eps2, a2 + (b2 - a2) / 3, q2, x_absolute_poly)
-print("result: ", aitken2[0], "iterations: ", aitken2[1])
+print("result: ", aitken2[0], "\niterations: ", aitken2[1])
 
 
 # Функция для получения данных и отрисовки графика зависимости количества итераций от точности
