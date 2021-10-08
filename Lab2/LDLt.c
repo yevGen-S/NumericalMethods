@@ -14,6 +14,7 @@ void printMatrix(float matrix[][n]) {
 	}
 }
 
+
 int main(void) {
 	float A[n][n] = { {3,2,1 }, {2,4,2}, {1,2,5} };
 	float L[n][n] = { 0 };
