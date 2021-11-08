@@ -1,12 +1,12 @@
 import numpy as np
 import csv
 import random
-from decimal import Decimal
+
 
 N = 10
 
 
-# def create_rand_symetric_matrix_with_defined_cond(n, cond):
+# def create_rand_symmetric_matrix_with_defined_cond(n, cond):
 #     log_cond = np.log(cond)
 #     exp_vec = np.arange(-log_cond / 4., log_cond * (n + 1) / (4 * (n - 1)), log_cond / (2. * (n - 1)))
 #     s = np.exp(exp_vec)
@@ -57,7 +57,7 @@ def write_to_file_matrix(list_of_matrices, name_of_file):
             return 0
         for i in range(16):
             matrix = list_of_matrices[i]
-            if name_of_file == "b.csv" or name_of_file == "b2.csv": #if it's vector
+            if name_of_file == "b.csv" or name_of_file == "b2.csv":  # if it's vector
                 writer.writerow(matrix)
                 writer.writerow('\t')
                 continue
