@@ -7,7 +7,9 @@
 */assert_test
 */bin/
 */lab2.py
-*/num_methods
-*/src/
+*/num_methods 
 */venv/
 **.kdev4
+*/cmake-build-debug
+*CMakeLists.txt
+*.csv
