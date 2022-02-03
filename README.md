@@ -4,5 +4,5 @@ Studying numerical methods in Peter the Great St.Petersburg Polytechnic Universi
 - [x] Lab1 Biection, Fixed-Point Iterations, Aiten for FPI 10 points
 - [x] Lab2 LDLt factorization 10 points
 - [x] Lab3 FPI for solving systems of linear algebraic equations on 10 points 
-- [-] Lab4 QR method for finding eigenvalues (Householder method to transfer matrix to Hessenberg's form, Givens method for QR decomposition,
+- [x] Lab4 QR method for finding eigenvalues (Householder method to transfer matrix to Hessenberg's form, Givens method for QR decomposition,
                                               shift improvement of method)
