@@ -7,19 +7,17 @@ eps = 1e-10
 n = 10
 
 
-def geom_progression(val):
+def geom_progression(sep, left):
     arr = []
     left = 1
     for i in range(n):
         arr.append(left)
-        left *= val
+        left /= sep
     return arr
 
 
-
-
-def create_rand_unsymmetric_matrix_with_defined_eigenvalues(n,val):
-    D = np.diag(geom_progression(val))
+def create_rand_unsymmetric_matrix_with_defined_eigenvalues(n, left, sep):
+    D = np.diag(geom_progression(sep, left))
     R = np.random.random(size=(n, n))
     A = R.dot(D).dot(np.linalg.inv(R))
     # A = A.astype(dtype = np.dtype(Decimal))
@@ -27,13 +25,20 @@ def create_rand_unsymmetric_matrix_with_defined_eigenvalues(n,val):
     return A
 
 
-
-def create_rand_symmetric_matrix_with_defined_eigenvalues(n):
-    D = np.diag(np.linspace(1, n, n))
+def create_rand_symmetric_matrix_with_defined_eigenvalues(n, left, sep):
+    D = np.diag(geom_progression(sep, left))
     Q, R = np.linalg.qr(np.random.random(size=(n, n)))
     A = Q.dot(D).dot(Q.T)
     # print(np.linalg.eigvals(A))
     return A
+
+
+# def create_rand_symmetric_matrix_with_defined_eigenvalues(n):
+#     D = np.diag(np.linspace(1, n, n))
+#     Q, R = np.linalg.qr(np.random.random(size=(n, n)))
+#     A = Q.dot(D).dot(Q.T)
+#     # print(np.linalg.eigvals(A))
+#     return A
 
 
 def outer_vector_multiply(vector1, vector2, n):
@@ -60,7 +65,7 @@ def to_hessenberg(A):  # householder method to get hessenberg formed matrix
         m = 1 / math.sqrt(2 * s * (s - B[i + 1][i]))
 
         for k in range(n):
-            if k < i:
+            if k <= i:
                 wt[k] = 0
 
         wt[i + 1] = m * (B[i + 1][i] - s)
@@ -81,14 +86,14 @@ def givens(A1):
     for j in range(n - 1):
 
         G = np.zeros(shape=(n, n))
-        if B[j+1][j] == 0:
+        if B[j + 1][j] == 0:
             continue
         # t = Decimal( B[j][j]) / Decimal(B[j + 1][j])
         #
         # c = Decimal("1") / (Decimal.sqrt(1 + t ** 2))
         # s = Decimal(str(t)) * c
 
-        t = B[j][j]/ B[j + 1][j]
+        t = B[j][j] / B[j + 1][j]
 
         c = 1 / (math.sqrt(1 + t ** 2))
         s = t * c
@@ -147,14 +152,40 @@ def QR(A, epsilon):
     while not stop_criteria(A, epsilon):
         Q, R = givens(A)
         A = R.dot(Q)
-        counter+=1
+        counter += 1
         counter_mass.append(counter)
 
-        error_of_iter.append(np.linalg.norm(abs_vals - np.diag(A)))
+        error_of_iter.append(abs(max(abs_vals) - max(np.diag(A))))
     # print("eigenvalues: ", np.diag(A))
-    return np.diag(A), counter,counter_mass, error_of_iter
+    return np.diag(A), counter, counter_mass, error_of_iter
 
 
 
 
+def QR_shift(A, epsilon):
+    A = to_hessenberg(A)
+    counter = 0
+    error_of_iter = []
+    counter_mass = []
+    abs_vals = np.linalg.eigvals(A)
+    while not stop_criteria(A, epsilon):
+        E = np.ones(n)
+        for i in range(n):
+            E[i] = A[n - 1][n - 1]
+        for i in range(n):
+            A[i][i] -= E[i]
+        Q, R = givens(A)
+        A = R.dot(Q)
+        for i in range(n):
+            A[i][i] += E[i]
+        counter += 1
+        counter_mass.append(counter)
 
+        error_of_iter.append(np.linalg.norm(np.sort(abs_vals) - np.sort(np.diag(A))))
+    # print("eigenvalues: ", np.diag(A))
+    return np.diag(A), counter, counter_mass, error_of_iter
+
+
+# a = create_rand_unsymmetric_matrix_with_defined_eigenvalues(n, 1, 0.5)
+# print(a)
+# QR_shift(a, epsilon=eps)

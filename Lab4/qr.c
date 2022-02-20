@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 #pragma warning(disable : 4996)
-
 #define eps1 1e-10
 #define DIMENSION 10
 
@@ -21,8 +20,15 @@ void printMatrix(double** A, int N, int M)
     }
 }
 
-// creates n x m matrix
-double** createMatrix(int n) { // c is length of column, r is length of row
+double copyMatrix( double*** matrix1, double** matrix2 ){
+    for(int i=0;i<DIMENSION;i ++){
+        for(int j =0;j<DIMENSION;j++){
+            (*matrix1)[i][j] = matrix2[i][j];
+        }
+    }
+}
+
+double** createMatrix(int n) {
     double** A = (double**)malloc(n * sizeof(double*));
     for (int i = 0; i < n; i++) {
         A[i] = (double*)malloc(n * sizeof(double));
@@ -104,22 +110,17 @@ double** hessenberg(double** A, int n) {
     for (int i = 0; i < n - 2; i++) {
         summa = 0;
 
-        for (int j = i+1;j<n;j++) {
+        for (int j = i + 1;j < n; j++) {
             summa += B[j][i] * B[j][i];
         }
-        if(-B[i + 1][i] > 0){
-            sign = 1;
-        }
-        else{
-            sign = -1;
-        }
+        sign = (-B[i+1][i]>0) ? 1 : -1;
         s = sign * sqrt(summa);
 
         m = 1 / sqrt(2 * s * (s - B[i + 1][i]));
 
         double* w = createVector(n);
         for (int j = 0; j < n; j++) {
-            if (j < i) {
+            if (j <= i) {
                 w[j] = 0;
             }
         }
@@ -139,7 +140,7 @@ double** hessenberg(double** A, int n) {
 
         B = multiplyMatrix(n, P, B);
         B = multiplyMatrix(n, B, P);
-
+//        printMatrix(B,n,n);
         }
     return B;
 }
@@ -198,7 +199,7 @@ char stop_criteria(double** matrix,int n, double eps) {
 
 
 
-double* qr(double** A, int n, double eps) {
+double* qr_hes(double** A, int n, double eps) {
     double** Q = createMatrix(n);
     double** R = createMatrix(n);
     double** A1;
@@ -218,10 +219,14 @@ double* qr(double** A, int n, double eps) {
     for (int i = 0; i < n; i++) {
         solution[i] = B[i][i];
     }
-    printf("number of iters qr with no shift: %i", iter);
+    printf("\nnumber of iters qr with hessenberg: %i", iter);
     printf("\n");
     return solution;
 }
+
+
+
+
 
 void matrix_defference(double*** matrix1, double** matrix2,int n ){
     for (int i = 0; i < n; i++){
@@ -234,37 +239,9 @@ void matrix_sum (double*** matrix1, double** matrix2, int n){
     }
 }
 
-double* qr_shift(double** A, int n, double eps) {
-    double** Q = createMatrix(n);
-    double** R = createMatrix(n);
-    double** A1;
-    int iter = 0;
-    double** B = hessenberg(A, n);
 
-    do {
-        double** E = create_E(n);
-        for(int i=0;i<n;i++){
-            E[i][i] = B[n-1][n-1];
-        }
-        matrix_defference(&B,E,n);
-        givens(B, &Q, &R, n);
-        A1 = multiplyMatrix(n, R, Q);
-        B = A1;
-        matrix_sum(&B,E,n);
-        iter++;
-    } while (!stop_criteria(B, n, eps));
-    FILE* file_iter = fopen("iterations.csv", "a");
-    fprintf(file_iter, "%i;", iter);
-    fclose(file_iter);
 
-    double* solution = (double*)malloc(n * sizeof(double));
-    for (int i = 0; i < n; i++) {
-        solution[i] = B[i][i];
-    }
-    printf("number of iters qr with shift: %i", iter);
-    printf("\n");
-    return solution;
-}
+
 
 
 int fileToMatrix(double*** A, FILE* file, int n) {
@@ -286,25 +263,66 @@ int fileToMatrix(double*** A, FILE* file, int n) {
 
 }
 
+
+
+double* qr_shift(double** A, int n, double eps) {
+    double** Q = createMatrix(n);
+    double** R = createMatrix(n);
+    double** A1;
+    int iter = 0;
+    double** B = hessenberg(A, n);
+    do {
+        double** E = create_E(n);
+        for(int i=0;i<n;i++){
+            E[i][i] = B[n-1][n-1];
+        }
+        matrix_defference(&B,E,n);
+        givens(B, &Q, &R, n);
+        A1 = multiplyMatrix(n, R, Q);
+        B = A1;
+        matrix_sum(&B,E,n);
+        iter++;
+    } while (!stop_criteria(B, n, eps));
+    FILE* file_iter = fopen("iterations.csv", "a");
+    fprintf(file_iter, "%i;", iter);
+    fclose(file_iter);
+
+    double* solution = (double*)malloc(n * sizeof(double));
+    for (int i = 0; i < n; i++) {
+        solution[i] = B[i][i];
+    }
+    printf("\nnumber of iters qr with shift: %i", iter);
+    printf("\n");
+    return solution;
+}
+
+
+
+
 int main(void) {
-
-
     double** m = createMatrix(DIMENSION);
     FILE* file = fopen("D:\\Coding\\NumericalMethods\\NumericalMethods\\Lab4\\src\\graphics\\matrix.csv", "r");
     fileToMatrix(&m,file,DIMENSION);
     double** m2 = m;
+    double** m3 = m;
 
 
     printMatrix(m, DIMENSION, DIMENSION);
-    double* solution = qr(m2, DIMENSION , eps1);
+    double* solution = qr_hes(m, DIMENSION , eps1);
     for(int i=0;i<DIMENSION;i++){
-        printf("%lf ",solution[i]);
+        printf("%.15lf ",solution[i]);
+    }
+    printf("\n");
+
+    printMatrix(m2,DIMENSION,DIMENSION);
+    double* solution2 = qr_shift(m2, DIMENSION , eps1);
+    for(int i=0;i<DIMENSION;i++){
+        printf("%.15lf ",solution2[i]);
     }
 
-    double* solution2 = qr_shift(m, DIMENSION , eps1);
-    for(int i=0;i<DIMENSION;i++){
-        printf("%lf ",solution2[i]);
-    }
+
+
+
 
 
 }

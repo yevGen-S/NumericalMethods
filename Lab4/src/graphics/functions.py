@@ -1,7 +1,6 @@
 import numpy as np
 import csv
 import random
-from qr import create_rand_unsymmetric_matrix_with_defined_eigenvalues
 N = 10
 
 
@@ -61,14 +60,37 @@ def create_rand_matrix_with_defined_cond(n, cond):
 #     # print(np.linalg.eigvals(A))
 #     return A
 
-def create_rand_symmetric_matrix_with_defined_eigenvalues(n):
-    D = np.diag(np.linspace(1, n, n))
+# def create_rand_symmetric_matrix_with_defined_eigenvalues(n):
+#     D = np.diag(np.linspace(1, n, n))
+#     Q , R = np.linalg.qr( np.random.random(size=(n, n)))
+#     A = Q.dot(D).dot(Q.T)
+#     # print(np.linalg.eigvals(A))
+#     return A
+
+def geom_progression(val):
+    arr = []
+    left = 1
+    for i in range(N):
+        arr.append(left)
+        left *= val
+    return arr
+
+def create_rand_symmetric_matrix_with_defined_eigenvalues(n,val):
+    D = np.diag(geom_progression(val))
     Q , R = np.linalg.qr( np.random.random(size=(n, n)))
     A = Q.dot(D).dot(Q.T)
+    print(np.diag(D))
+    return A
+
+def create_rand_unsymmetric_matrix_with_defined_eigenvalues(n,val):
+    D = np.diag(geom_progression(val))
+    print(D)
+    R = np.random.random(size=(n, n))
+    A = R.dot(D).dot(np.linalg.inv(R))
+    # A = A.astype(dtype = np.dtype(Decimal))
     # print(np.linalg.eigvals(A))
     return A
 
-
-a = create_rand_unsymmetric_matrix_with_defined_eigenvalues(N, 1.1)
-print(a)
+a = create_rand_symmetric_matrix_with_defined_eigenvalues(N,1.1)
+# print(a)
 write_matrix(a, "matrix.csv")
