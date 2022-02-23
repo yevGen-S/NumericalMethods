@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import integrate
+from decimal import Decimal
 
 
 def func(x):
@@ -14,6 +15,7 @@ def integration3_8_recursive(f, a, b, eps):
     I = ((f(a) + 3 * f((2 * a + (a + b) / 2) / 3) + 3 * f((a + 2 * (a + b) / 2) / 3) + f((a + b) / 2)) * (
             (a + b) / 2 - a)) / 8 \
         + (f(a) + 3 * f((2 * (a + b) / 2 + b) / 3) + 3 * f(((a + b) / 2 + 2 * b) / 3) + f(b)) * (b - (a + b) / 2) / 8
+
 
     if (abs(I - I_prev) / (2 ** 4 - 1)) < eps:
         return I_prev
@@ -33,21 +35,26 @@ def integration3_8(f, a, b, eps):
 
     incrementer = lambda i: i + (i - 1)
     n = 2
+    number_of_nodes_arr = []
     I_prev = integration_body(n)
     n = incrementer(n)
+    number_of_nodes_arr.append(n)
     I = integration_body(n)
-
+    err = []
+    err.append(abs(I - I_prev) / (2 ** 4 - 1))
     while (abs(I - I_prev) / (2 ** 4 - 1)) > eps:
+        err.append(abs(I - I_prev) / (2 ** 4 - 1))
         I_prev = I
         n = incrementer(n)
         I = integration_body(n)
+        number_of_nodes_arr.append(n)
 
-    return I
+    return I, err, number_of_nodes_arr
 
 
 def fun(x):
     return np.exp(x)
 
 
-print(integration3_8(fun, a=0, b=1, eps=1e-14))
+print(integration3_8(fun, a=0, b=1, eps=1e-15))
 print(integrate.quad(fun, a=0, b=1))
