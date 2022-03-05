@@ -10,7 +10,3 @@ Studying numerical methods in Peter the Great St.Petersburg Polytechnic Universi
 - [x] Lab6_2 Natural cubic spline intrepolation of functions on uniform grid and chebyshev grid.
 - [x] Lab7_3 Integration method 3/8.
 
-<details>
-    <summary>Toggle Switch</summary>
-    Foldable Content[enter image description here][1]
-</details>
