@@ -16,7 +16,6 @@ def integration3_8_recursive(f, a, b, eps):
             (a + b) / 2 - a)) / 8 \
         + (f(a) + 3 * f((2 * (a + b) / 2 + b) / 3) + 3 * f(((a + b) / 2 + 2 * b) / 3) + f(b)) * (b - (a + b) / 2) / 8
 
-
     if (abs(I - I_prev) / (2 ** 4 - 1)) < eps:
         return I_prev
 
@@ -43,11 +42,41 @@ def integration3_8(f, a, b, eps):
     err = []
     err.append(abs(I - I_prev) / (2 ** 4 - 1))
     while (abs(I - I_prev) / (2 ** 4 - 1)) > eps:
-        err.append(abs(I - I_prev) / (2 ** 4 - 1))
         I_prev = I
         n = incrementer(n)
         I = integration_body(n)
+        err.append(abs(I - I_prev) / (2 ** 4 - 1))
         number_of_nodes_arr.append(n)
+
+    return I, err, number_of_nodes_arr
+
+
+def integration3_8__2(f, a, b, eps):
+    def integration_body(h, n):
+        x_grid = [a + h * k for k in range(n)]
+        I = 0
+        for i in range(1, n):
+            I += (f(x_grid[i - 1]) + 3 * f((2 * x_grid[i - 1] + x_grid[i]) / 3) +
+                  3 * f((x_grid[i - 1] + 2 * x_grid[i]) / 3) + f(x_grid[i])) * (x_grid[i] - x_grid[i - 1]) / 8
+        return I
+
+    n = 1
+    h = (b - a) / 1
+    number_of_nodes_arr = [n + 1]
+    I_prev = integration_body(h, n + 1)
+    n *= 2
+    h /= 2
+    number_of_nodes_arr.append(n + 1)
+    I = integration_body(h, n + 1)
+    err = []
+    err.append(abs(I - I_prev) / (2 ** 4 - 1))
+    while (abs(I - I_prev) / (2 ** 4 - 1)) > eps:
+        I_prev = I
+        n *= 2
+        h /= 2
+        I = integration_body(h, n + 1)
+        err.append(abs(I - I_prev) / (2 ** 4 - 1))
+        number_of_nodes_arr.append(n + 1)
 
     return I, err, number_of_nodes_arr
 
@@ -55,6 +84,5 @@ def integration3_8(f, a, b, eps):
 def fun(x):
     return np.exp(x)
 
-
-print(integration3_8(fun, a=0, b=1, eps=1e-15))
-print(integrate.quad(fun, a=0, b=1))
+# print(integration3_8(func, a=-1, b=1, eps=1e-13))
+# print(integrate.quad(func, a=-1, b=1))
