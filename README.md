@@ -9,4 +9,4 @@ Studying numerical methods in Peter the Great St.Petersburg Polytechnic Universi
 - [x] Lab5_1 Lagrange polynome for intrepolating function on uniform grid and chebyshev grid.
 - [x] Lab6_2 Natural cubic spline intrepolation of functions on uniform grid and chebyshev grid.
 - [x] Lab7_3 Integration method 3/8.
-
+- [x] Lab8_4 Integration method Gauss with 5 nodes.
